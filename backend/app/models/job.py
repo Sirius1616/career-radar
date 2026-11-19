@@ -13,7 +13,10 @@ class Job(UuidPkMixin, TimestampMixin, Base):
     __tablename__ = "jobs"
 
     employer_id: Mapped[uuid.UUID] = mapped_column(
-        Uuid(as_uuid=True), ForeignKey("employers.id", ondelete="CASCADE"), nullable=False, index=True
+        Uuid(as_uuid=True),
+        ForeignKey("employers.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
     created_by: Mapped[uuid.UUID] = mapped_column(
         Uuid(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
@@ -35,5 +38,7 @@ class Job(UuidPkMixin, TimestampMixin, Base):
     location: Mapped[str | None] = mapped_column(String(300), nullable=True)
     department: Mapped[str | None] = mapped_column(String(300), nullable=True)
     description: Mapped[str] = mapped_column(Text, nullable=False)
-    description_format: Mapped[str] = mapped_column(String(10), nullable=False, server_default="text")
+    description_format: Mapped[str] = mapped_column(
+        String(10), nullable=False, server_default="text"
+    )
     feed_metadata: Mapped[str] = mapped_column(Text, nullable=False)

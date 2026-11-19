@@ -37,7 +37,8 @@ def _register_employer(
 
     from app.scraping import Page
 
-    with patch("app.api.employers.fetch_page", return_value=Page(url, "<html><title>E</title></html>", "E")):
+    page = Page(url, "<html><title>E</title></html>", "E")
+    with patch("app.api.employers.fetch_page", return_value=page):
         resp = app.post("/employers", json={"career_url": url, "name": url}, headers=headers)
     assert resp.status_code == 201, resp.text
     return resp.json()["id"]
@@ -76,7 +77,7 @@ def _set_fetcher(monkeypatch: pytest.MonkeyPatch, provider: str, stub: object) -
 
 def test_discovery_stores_jobs_with_provenance(app, db_session: Session) -> None:
     headers = _auth(app, "disc-alice@example.com")
-    employer_id = _register_employer(app, headers, "https://jobs.lever.co/alpha")
+    _register_employer(app, headers, "https://jobs.lever.co/alpha")
     with db_session.begin_nested():
         pass
     # make employer GREENHOUSE type by patching fetcher by provider key
@@ -117,7 +118,10 @@ def test_duplicate_run_updates_last_seen_without_new_rows(
 
     with patch.dict(discovery.PROVIDER_FETCHERS, {"LEVER": stub}):
         first = app.post("/discovery/run", headers=headers).json()
-        first_seen = db_session.scalar(select(Job).where(Job.created_by == uuid.UUID(me["id"]))).last_seen_at
+        job_row = db_session.scalar(
+            select(Job).where(Job.created_by == uuid.UUID(me["id"]))
+        )
+        first_seen = job_row.last_seen_at
         second = app.post("/discovery/run", headers=headers).json()
 
     assert first["jobs_new"] == 1
