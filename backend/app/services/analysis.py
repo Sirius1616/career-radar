@@ -19,7 +19,10 @@ from app.ai import gateway
 from app.models.analysis import JobAnalysis
 from app.models.job import Job
 
-SALARY_PATTERN = re.compile(r"(?:£|\$|€)\s?\d[\d,]*(?:\.\d+)?\s?(?:k|K|000)?(?:\s?(?:per|/)\s?(?:year|annum|month|day|hour))?")
+SALARY_PATTERN = re.compile(
+    r"(?:£|\$|€)\s?\d[\d,]*(?:\.\d+)?\s?(?:k|K|000)?"
+    r"(?:\s?(?:per|/)\s?(?:year|annum|month|day|hour))?"
+)
 MAX_ESCALATIONS = 1
 
 ANALYSIS_TASK = "job_analysis"

@@ -56,9 +56,8 @@ def _make_job(app: TestClient, headers: dict[str, str], email: str) -> str:
 
     from app.scraping import Page
 
-    with patch(
-        "app.api.employers.fetch_page", return_value=Page(url="u", content="<html><title>E</title></html>", title="E")
-    ):
+    page = Page(url="u", content="<html><title>E</title></html>", title="E")
+    with patch("app.api.employers.fetch_page", return_value=page):
         app.post(
             "/employers",
             json={"career_url": f"https://jobs.lever.co/anlys/{email}"},
