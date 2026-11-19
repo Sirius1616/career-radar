@@ -47,7 +47,9 @@ def _sample_profile(**overrides: object) -> dict:
         ],
         "projects": [{"name": "Portfolio", "description": None, "url": "https://example.com/"}],
         "certifications": [{"name": "AWS CCP", "issuer": "AWS", "issued_on": "2023-05-01"}],
-        "achievements": [{"description": "Cut API latency", "metric": "p95 -40%", "is_verified": True}],
+        "achievements": [
+            {"description": "Cut API latency", "metric": "p95 -40%", "is_verified": True}
+        ],
         "github_url": "https://github.com/johndoe",
         "portfolio_url": None,
         "linkedin_url": None,
@@ -97,7 +99,8 @@ def test_experience_validation_requires_employer_title_dates(app) -> None:
     headers = _auth(app, "profile-dave@example.com")
     base = _sample_profile()
     for field in ("employer", "title", "start_date"):
-        bad = {**base, "experiences": [{k: v for k, v in base["experiences"][0].items() if k != field}]}
+        experience = base["experiences"][0]
+        bad = {**base, "experiences": [{k: v for k, v in experience.items() if k != field}]}
         resp = app.put("/profile", json=bad, headers=headers)
         assert resp.status_code == 422, field
 
