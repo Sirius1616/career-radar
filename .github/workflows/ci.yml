@@ -11,6 +11,22 @@ jobs:
     defaults:
       run:
         working-directory: backend
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: career_radar
+          POSTGRES_PASSWORD: career_radar
+          POSTGRES_DB: career_radar
+        ports:
+          - "5438:5432"
+        options: >-
+          --health-cmd "pg_isready -U career_radar"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql+psycopg://career_radar:career_radar@localhost:5438/career_radar
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
