@@ -16,7 +16,7 @@ from app.api.auth import get_current_user
 from app.db import session_scope
 from app.models.employer import Employer
 from app.models.user import User
-from app.providers.detection import UNKNOWN, detect_ats_provider
+from app.providers.detection import UNKNOWN, detect_from_page
 from app.scraping import FetchError, fetch_page
 
 router = APIRouter(prefix="/employers", tags=["employers"])
@@ -76,7 +76,7 @@ def register_employer(
             status_code=422, detail="Career page could not be retrieved"
         ) from None
 
-    detection = detect_ats_provider(career_url)
+    detection = detect_from_page(career_url, page.content)
     name = payload.name or page.title or urlsplit(career_url).netloc
 
     with session_scope() as session:
