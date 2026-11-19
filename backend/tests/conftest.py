@@ -45,8 +45,18 @@ def engine(database_url: str) -> Iterator[Engine]:
         conn.execute(text(f"CREATE DATABASE {TEST_DATABASE_NAME}"))
     admin.dispose()
 
-    # Run real migrations against the fresh test database.
+    # Re-read settings/env now that the test URL is set; drop any cached engine
+    # created earlier in the process (e.g. by module-level app creation).
     os.environ["DATABASE_URL"] = database_url
+
+    from app.config import get_settings
+
+    get_settings.cache_clear()
+    import app.db as app_db
+
+    app_db._engine = None
+
+    # Run real migrations against the fresh test database.
     alembic_cfg = Config()
     alembic_cfg.set_main_option("script_location", str(MIGRATIONS_DIR))
     command.upgrade(alembic_cfg, "head")
