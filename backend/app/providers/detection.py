@@ -79,7 +79,9 @@ def detect_ats_provider(career_url: str) -> DetectionResult:
             token = match.group("token")
             groups = match.groupdict()
             feed = (
-                feed_template.format(token=token, host=groups.get("host"), tenant=groups.get("host"))
+                feed_template.format(
+                    token=token, host=groups.get("host"), tenant=groups.get("host")
+                )
                 if "{host}" in feed_template
                 else feed_template.format(token=token)
             )

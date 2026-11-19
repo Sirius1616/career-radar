@@ -68,7 +68,10 @@ def test_unknown_url_returns_not_detected_without_error() -> None:
 @pytest.mark.parametrize(
     ("html", "expected"),
     [
-        ("<script src='https://boards.greenhouse.io/embed/job_board?for=acme'></script>", "GREENHOUSE"),
+        (
+            "<script src='https://boards.greenhouse.io/embed/job_board?for=acme'></script>",
+            "GREENHOUSE",
+        ),
         ("<a href='https://jobs.lever.co/apply'>Apply</a>", "LEVER"),
         ("<div data-ats='https://jobs.ashbyhq.com/acme'>", "ASHBY"),
         ("<link rel='alternate' href='https://acme.teamtailor.com/jobs.json'>", "TEAMTAILOR"),
