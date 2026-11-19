@@ -1,0 +1,37 @@
+{
+ "jobs": [
+  {
+   "id": 1001,
+   "title": "Backend Engineer",
+   "absolute_url": "https://boards.greenhouse.io/acme/jobs/1001",
+   "updated_at": "2026-11-18T10:00:00-05:00",
+   "location": {
+    "name": "London, UK"
+   },
+   "departments": [
+    {
+     "name": "Engineering"
+    }
+   ],
+   "content": "<div><p>Build APIs with Python.</p></div>"
+  },
+  {
+   "id": 1002,
+   "title": "Platform Engineer",
+   "absolute_url": "https://boards.greenhouse.io/acme/jobs/1002",
+   "updated_at": "2026-11-10T08:30:00-05:00",
+   "location": {
+    "name": "Remote (EU)"
+   },
+   "departments": [
+    {
+     "name": "Infrastructure"
+    }
+   ],
+   "content": "<div><p>Kubernetes and Go.</p></div>"
+  }
+ ],
+ "meta": {
+  "total": 2
+ }
+}
