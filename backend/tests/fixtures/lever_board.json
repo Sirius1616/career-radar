@@ -1,0 +1,24 @@
+[
+ {
+  "id": "abc-123",
+  "text": "Senior Python Engineer",
+  "hostedUrl": "https://jobs.lever.co/beta/abc-123",
+  "createdAt": 1763500800000,
+  "categories": {
+   "location": "Berlin, Germany",
+   "department": "Product Engineering"
+  },
+  "descriptionPlain": "We are hiring a senior Python engineer."
+ },
+ {
+  "id": "def-456",
+  "text": "DevOps Engineer",
+  "hostedUrl": "https://jobs.lever.co/beta/def-456",
+  "createdAt": 1762900000000,
+  "categories": {
+   "location": "Remote",
+   "department": "SRE"
+  },
+  "description": "<p>Run our infrastructure.</p>"
+ }
+]
