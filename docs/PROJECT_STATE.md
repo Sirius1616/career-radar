@@ -29,7 +29,7 @@ Key dependency chain:
 |---|---|
 | #27 Foundation scaffold, Compose, CI | complete (closed) |
 | #28 Database foundation | complete (PR #63 merged) |
-| #29 User authentication | implemented, PR open |
+| #29 User authentication | complete (PR #64 merged) |
 
 ## Repo layout
 
