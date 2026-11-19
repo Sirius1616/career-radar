@@ -27,7 +27,8 @@ Key dependency chain:
 
 | Issue | Status |
 |---|---|
-| #27 Foundation scaffold, Compose, CI | implemented on feature/scaffold, PR open |
+| #27 Foundation scaffold, Compose, CI | complete (closed) |
+| #28 Database foundation | implemented, PR open |
 
 ## Repo layout
 
@@ -54,4 +55,4 @@ docker compose up   # local stack
 
 1. Merge PR for #27, close it.
 2. Implement #28 (Database foundation): SQLAlchemy base with UUID PK/timestamps, Alembic wired, pgvector-enabled migration, transactional test fixtures.
-3. Then #29 auth, then Epic 2 profile/preferences.
+3. Then #29 auth (argon2/bcrypt hashing, JWT sessions, ownership dependency), then #31/#32 profile & preferences.
