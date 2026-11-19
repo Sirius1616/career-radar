@@ -19,7 +19,9 @@ PROMPT = "Analyse this job description: <jd>{}</jd>"
 def app(engine):
     from fastapi.testclient import TestClient
 
-    return TestClient(create_app := __import__("app.main", fromlist=["create_app"]).create_app())
+    from app.main import create_app
+
+    return TestClient(create_app())
 
 
 @pytest.fixture(autouse=True)
@@ -101,7 +103,9 @@ def test_budget_exhausted_skips_non_critical(fake_caller: FakeCaller, db_session
 def test_critical_call_bypasses_budget_gate(fake_caller: FakeCaller, db_session: Session) -> None:
     _settings(ai_daily_budget_micro=0)
     try:
-        result = complete("sponsorship_analysis", PROMPT.format("x"), critical=True, session=db_session)
+        result = complete(
+            "sponsorship_analysis", PROMPT.format("x"), critical=True, session=db_session
+        )
         assert result.status == "completed"
         assert len(fake_caller.calls) == 1
     finally:
