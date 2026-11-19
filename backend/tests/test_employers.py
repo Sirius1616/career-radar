@@ -24,12 +24,16 @@ def _auth(client: TestClient, email: str) -> dict[str, str]:
 
 
 def _page(url: str) -> Page:
-    return Page(url=url, content="<html><title>Acme Corp Jobs</title></html>", title="Acme Corp Jobs")
+    content = "<html><title>Acme Corp Jobs</title></html>"
+    return Page(url=url, content=content, title="Acme Corp Jobs")
 
 
 def test_register_detects_provider_and_feed_endpoint(app, db_session) -> None:
     with (
-        patch("app.api.employers.fetch_page", return_value=_page("https://boards.greenhouse.io/acme")),
+        patch(
+            "app.api.employers.fetch_page",
+            return_value=_page("https://boards.greenhouse.io/acme"),
+        ),
         patch("app.scraping.robots_allows", return_value=True),
     ):
         resp = app.post(
@@ -68,7 +72,9 @@ def test_duplicate_registration_rejected(app, db_session) -> None:
         patch("app.api.employers.fetch_page", return_value=_page("https://jobs.lever.co/dup")),
         patch("app.scraping.robots_allows", return_value=True),
     ):
-        first = app.post("/employers", json={"career_url": "https://jobs.lever.co/dup"}, headers=headers)
+        first = app.post(
+            "/employers", json={"career_url": "https://jobs.lever.co/dup"}, headers=headers
+        )
         second = app.post(
             "/employers", json={"career_url": "https://jobs.lever.co/dup/"}, headers=headers
         )
@@ -79,7 +85,10 @@ def test_duplicate_registration_rejected(app, db_session) -> None:
 
 def test_unreachable_url_clear_error(app, db_session) -> None:
     headers = _auth(app, "emp-dave@example.com")
-    with patch("app.api.employers.fetch_page", side_effect=FetchError("Career page returned HTTP 503")):
+    with patch(
+        "app.api.employers.fetch_page",
+        side_effect=FetchError("Career page returned HTTP 503"),
+    ):
         resp = app.post(
             "/employers", json={"career_url": "https://careers.down.example"}, headers=headers
         )
@@ -89,7 +98,10 @@ def test_unreachable_url_clear_error(app, db_session) -> None:
 
 def test_robots_disallow_rejected(app, db_session) -> None:
     headers = _auth(app, "emp-eve@example.com")
-    with patch("app.api.employers.fetch_page", side_effect=FetchError("robots.txt disallows fetching this page")):
+    with patch(
+        "app.api.employers.fetch_page",
+        side_effect=FetchError("robots.txt disallows fetching this page"),
+    ):
         resp = app.post(
             "/employers", json={"career_url": "https://careers.private.example"}, headers=headers
         )
@@ -126,7 +138,9 @@ def test_monitoring_status_patch(app, db_session) -> None:
         patch("app.api.employers.fetch_page", return_value=_page("https://jobs.lever.co/ivanco")),
         patch("app.scraping.robots_allows", return_value=True),
     ):
-        created = app.post("/employers", json={"career_url": "https://jobs.lever.co/ivanco"}, headers=headers).json()
+        created = app.post(
+            "/employers", json={"career_url": "https://jobs.lever.co/ivanco"}, headers=headers
+        ).json()
     paused = app.patch(
         f"/employers/{created['id']}", json={"monitoring_status": "paused"}, headers=headers
     ).json()
