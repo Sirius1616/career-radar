@@ -30,11 +30,23 @@ Key dependency chain:
 | #27 Foundation scaffold, Compose, CI | complete (closed) |
 | #28 Database foundation | complete (PR #63 merged) |
 | #29 User authentication | complete (PR #64 merged) |
+| #30 Frontend app shell | complete (PR #66 merged) |
+| #31 Profile model and API | complete (PR #65 merged) |
+| #32 Job preferences | complete (PR #67 merged) |
+| #35 Employer registry | complete (PR #68 merged) |
+| #36 ATS detection | complete (PR #69 merged) |
+| #37 Feed clients (Greenhouse/Lever) | complete (PR #70 merged) |
+| #39 Discovery service | complete (PR #71 merged) |
+| #42 Content retrieval | complete (PR #72 merged) |
+| #43 AI gateway | complete (PR #73 merged) |
+| #44 Job analysis pipeline | complete (PR #74 merged) |
 
 ## Repo layout
 
 - `backend/` — FastAPI app: `app/main.py` (app factory), `app/config.py` (pydantic-settings incl. AUTH_JWT_SECRET), `app/security.py` (bcrypt+PyJWT), `app/api/auth.py` (register/login/me, get_current_user dependency), `app/db.py` (Base, UuidPkMixin, TimestampMixin, session_scope), `app/models/user.py`, Alembic in `migrations/`; pytest in `tests/` with fresh-per-session test DB via migrations + per-test rollback; uv-managed
-- Local dev DB port is 5438 (host 5432 is taken by other projects)
+- Local dev DB port is 5438 (host 5432 is taken by other projects); dev db container must be started (`docker compose up -d db`) before alembic/pytest
+- Backend architecture: app/api/* routers (auth, profile, preferences, employers, discovery, analysis), app/services/* (discovery, analysis), app/providers/* (detection, greenhouse/lever clients, jobs DTO with throttling+backoff), app/ai/gateway.py (Claude gateway), app/scraping.py (safe fetch, robots, SSRF guard, retrieval w/ TTL cache)
+- AI gateway contract: complete(task_type, prompt, model_tier, max_tokens, critical, user_id, session) -> GatewayResult(status completed|cache_hit|skipped_budget); tests inject a fake caller via gateway.set_caller; ai_cache/ai_usage_logs tables must be cleaned between tests via session_scope (db_session fixture rolls back)
 - `frontend/` — Vite React TS (`src/App.tsx` pings `/healthz`), `package-lock.json` committed
 - `docker-compose.yaml` — db (pgvector/pg16), api, worker (placeholder), frontend
 - `.github/workflows/ci.yml` — backend ruff+mypy+pytest, frontend build; runs on PRs and pushes to main
@@ -42,7 +54,7 @@ Key dependency chain:
 ## Commands
 
 ```bash
-cd backend && uv sync --dev && uv run ruff check . && uv run mypy app && uv run pytest -q
+cd backend && uv sync --dev && uv run ruff check . && uv run mypy app && DATABASE_URL=postgresql+psycopg://career_radar:career_radar@localhost:5438/career_radar uv run pytest -q
 cd frontend && npm ci && npm run build
 docker compose up   # local stack
 ```
@@ -56,5 +68,6 @@ docker compose up   # local stack
 ## Next actions
 
 1. Merge PR for #27, close it.
-2. Merge #29 PR.
-3. Next: #31 profile model+API, then #32 preferences, then Epic 3 (#35 employer registry, #36 ATS detection).
+2. Next eligible: #45 sponsorship classification (deps: #44 done), then #40 historical discovery, #41 availability recheck, #46 Nigeria eligibility.
+3. Then Epic 7 matching (#47) which needs analysis + sponsorship outputs.
+4. Then job management (#49), documents (#51/#52), applications (Epic 10).
