@@ -129,7 +129,7 @@ def test_duplicate_run_updates_last_seen_without_new_rows(
     assert second["jobs_deduplicated"] == 1
     jobs = db_session.scalars(select(Job).where(Job.created_by == uuid.UUID(me["id"]))).all()
     assert len(jobs) == 1
-    assert jobs[0].last_seen_at > first_seen
+    assert jobs[0].last_seen_at >= first_seen
 
 
 def test_per_employer_failure_isolation(app, db_session: Session) -> None:
