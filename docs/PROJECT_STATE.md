@@ -28,11 +28,13 @@ Key dependency chain:
 | Issue | Status |
 |---|---|
 | #27 Foundation scaffold, Compose, CI | complete (closed) |
-| #28 Database foundation | implemented, PR open |
+| #28 Database foundation | complete (PR #63 merged) |
+| #29 User authentication | implemented, PR open |
 
 ## Repo layout
 
-- `backend/` — FastAPI app (`app/main.py` app factory, `app/config.py` settings, `app/logging.py` JSON logs), pytest in `tests/`, uv-managed (`pyproject.toml`, `uv.lock`)
+- `backend/` — FastAPI app: `app/main.py` (app factory), `app/config.py` (pydantic-settings incl. AUTH_JWT_SECRET), `app/security.py` (bcrypt+PyJWT), `app/api/auth.py` (register/login/me, get_current_user dependency), `app/db.py` (Base, UuidPkMixin, TimestampMixin, session_scope), `app/models/user.py`, Alembic in `migrations/`; pytest in `tests/` with fresh-per-session test DB via migrations + per-test rollback; uv-managed
+- Local dev DB port is 5438 (host 5432 is taken by other projects)
 - `frontend/` — Vite React TS (`src/App.tsx` pings `/healthz`), `package-lock.json` committed
 - `docker-compose.yaml` — db (pgvector/pg16), api, worker (placeholder), frontend
 - `.github/workflows/ci.yml` — backend ruff+mypy+pytest, frontend build; runs on PRs and pushes to main
@@ -54,5 +56,5 @@ docker compose up   # local stack
 ## Next actions
 
 1. Merge PR for #27, close it.
-2. Implement #28 (Database foundation): SQLAlchemy base with UUID PK/timestamps, Alembic wired, pgvector-enabled migration, transactional test fixtures.
-3. Then #29 auth (argon2/bcrypt hashing, JWT sessions, ownership dependency), then #31/#32 profile & preferences.
+2. Merge #29 PR.
+3. Next: #31 profile model+API, then #32 preferences, then Epic 3 (#35 employer registry, #36 ATS detection).

@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     database_url: str | None = None
     anthropic_api_key: str | None = None
+    auth_jwt_secret: str | None = None
 
 
 @lru_cache

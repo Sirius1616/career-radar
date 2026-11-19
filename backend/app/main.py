@@ -13,6 +13,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     configure_logging(settings.log_level)
     app = FastAPI(title="Career Radar", version="0.1.0")
 
+    from app.api import api_router
+
+    app.include_router(api_router)
+
     @app.get("/healthz")
     def healthz() -> JSONResponse:
         database = "unconfigured"
