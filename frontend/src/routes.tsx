@@ -3,6 +3,7 @@ import { getToken, setToken } from "./api";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardLayout from "./pages/DashboardLayout";
+import PreferencesPage from "./pages/PreferencesPage";
 
 function RequireAuth() {
   return getToken() ? <Outlet /> : <Navigate to="/login" replace />;
@@ -37,7 +38,7 @@ export default function AppRoutes() {
         <Route element={<DashboardLayout />}>
           <Route index element={<Placeholder title="Overview" />} />
           <Route path="profile" element={<Placeholder title="Profile" />} />
-          <Route path="preferences" element={<Placeholder title="Preferences" />} />
+          <Route path="preferences" element={<PreferencesPage />} />
           <Route path="jobs" element={<Placeholder title="Jobs" />} />
           <Route path="applications" element={<Placeholder title="Applications" />} />
           <Route path="activity" element={<Placeholder title="Activity" />} />
